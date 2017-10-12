@@ -12,22 +12,30 @@ var urls = [
 $(document).ready(function() {
     $('#search').click(function() {
         var id = document.getElementById('userid').value;
-        console.log(urls.length);
-        if(id != ''){
-            var xhr = [];
-            for(var i = 0; i < urls.length; i++){
-                xhr[i] = new XMLHttpRequest();
-                url = urls[i] + id;
-                xhr[i].open("GET", url, true);
-                xhr[i].onreadystatechange = function () {
-                    console.log(xhr[i].status); 
-                    if (xhr[i].readyState == 4 && xhr[i].status == 200) {
-                        console.log('working'); 
-                    }
-                };
-                xhr[i].setRequestHeader( 'Access-Control-Allow-Origin', '*');
-                xhr[i].send();
-            }
-        }
+        for (var i = 0; i < urls.length; i++) 
+        checkStatus(urls[i] + id);
     });
 });
+
+function createButton(provider, url) {
+    var div = document.getElementById('link-buttons');
+    var btn = document.createElement("BUTTON");
+    var t = document.createTextNode(provider);
+    btn.className = "btn btn-success";
+    btn.style.margin = '1%';
+    btn.addEventListener('click', function(){ window.open(url); });
+    btn.appendChild(t);
+    div.appendChild(btn);
+}
+
+function checkStatus(siteurl) {
+    $.ajax({
+        type: 'POST',
+        url: siteurl,
+        data: '',
+        dataType: 'json',
+        complete: function(xhr) {
+            console.log(xhr.status);
+        } 
+      });
+}
