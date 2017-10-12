@@ -1,19 +1,23 @@
-var urls = [
-    'https://www.linkedin.com/in/',
-    'https://github.com/', 
-    'https://www.facebook.com/', 
-    'https://www.hackerrank.com/', 
-    'https://www.codechef.com/users/',
-    'http://www.spoj.com/users/',
-    'https://angel.co/',
-    'https://twitter.com/'
-];
+var urls = {
+    LinkedIn:'https://www.linkedin.com/in/',
+    Github: 'https://github.com/',
+    Facebook: 'https://www.facebook.com/',
+    Hackerrank: 'https://www.hackerrank.com/',
+    Codechef: 'https://www.codechef.com/users/',
+    SPOJ: 'http://www.spoj.com/users/',
+    Angellist: 'https://angel.co/',
+    Twitter: 'https://twitter.com/'
+};
 
 $(document).ready(function() {
     $('#search').click(function() {
+        var foo = document.getElementById('link-buttons');
+        while (foo.firstChild) foo.removeChild(foo.firstChild);
         var id = document.getElementById('userid').value;
-        for (var i = 0; i < urls.length; i++) 
-        checkStatus(urls[i] + id);
+        for (var i in urls){
+            provider = i;
+            checkStatus(provider ,urls[i] + id);
+        }
     });
 });
 
@@ -28,14 +32,17 @@ function createButton(provider, url) {
     div.appendChild(btn);
 }
 
-function checkStatus(siteurl) {
+function checkStatus(provider, siteurl) {
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: siteurl,
         data: '',
         dataType: 'json',
         complete: function(xhr) {
-            console.log(xhr.status);
+            if (xhr.status != 404)
+            {
+                createButton(provider, siteurl);
+            }
         } 
       });
 }
